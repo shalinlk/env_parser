@@ -62,8 +62,8 @@ func (e *EnvToStruct) Separator(sep string) {
 //are to be mapped.
 func (e EnvToStruct) Map(source interface{}) error {
 
-	if reflect.ValueOf(source).IsNil() {
-		return errors.New("Nil object received for mapping")
+	if source == nil {
+		return errors.New("ivalid source;")
 	}
 
 	rType := reflect.TypeOf(source)
@@ -71,6 +71,9 @@ func (e EnvToStruct) Map(source interface{}) error {
 		return errors.New("Expects pointer to target object")
 	}
 	rType = rType.Elem()
+	if rType.Kind() != reflect.Struct {
+		return errors.New("Expects pointer to struct")
+	}
 	rFieldNum := rType.NumField()
 	metaHolder := make(map[int]fieldMeta, rFieldNum)
 
@@ -88,9 +91,13 @@ func (e EnvToStruct) Map(source interface{}) error {
 		thisMeta.defVal = tagInfo.deftVal
 		metaHolder[i] = thisMeta
 	}
-	metaHolder = e.envToHolder(e.appName + e.separator, metaHolder)
+	metaHolder = e.envToHolder(e.appName+e.separator, metaHolder)
 
 	rValue := reflect.ValueOf(source)
+	if rValue.IsNil() {
+		return errors.New("pointer to nil obtained.")
+	}
+
 	if rValue.Kind() == reflect.Ptr {
 		rValue = rValue.Elem()
 	}
