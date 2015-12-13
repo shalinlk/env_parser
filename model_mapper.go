@@ -12,7 +12,7 @@ package env_parser
 
 import (
 	"errors"
-	"github.com/shalinkktl/env_parser/models"
+	"github.com/shalinlk/env_parser/models"
 	"os"
 	"reflect"
 	"strconv"
